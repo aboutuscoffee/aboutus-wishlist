@@ -56,7 +56,7 @@ export default function ItemSheet({ item, onClose, onSave, onDelete }) {
           </label>
         </div>
         <label>
-          購入リンク
+          購入先リンク
           <input type="url" inputMode="url" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://" />
         </label>
         <label className="check">

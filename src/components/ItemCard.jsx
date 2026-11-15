@@ -39,7 +39,7 @@ export default function ItemCard({ item, onEdit, onBought, onRestore }) {
               <path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
             <span>
-              商品ページを開く
+              購入先リンク
               <small>{hostOf(item.url)}</small>
             </span>
           </a>
