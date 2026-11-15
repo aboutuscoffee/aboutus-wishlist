@@ -1,4 +1,4 @@
-import { yen, subtotal, shortDate } from '../lib/format.js';
+import { yen, subtotal, shortDate, hostOf } from '../lib/format.js';
 
 export default function ItemCard({ item, onEdit, onBought, onRestore }) {
   const isBought = item.status === 'bought';
@@ -34,9 +34,17 @@ export default function ItemCard({ item, onEdit, onBought, onRestore }) {
 
       <div className="card-actions">
         {item.url ? (
-          <a className="btn" href={item.url} target="_blank" rel="noopener noreferrer">商品ページ</a>
+          <a className="item-link" href={item.url} target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+              <path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            <span>
+              商品ページを開く
+              <small>{hostOf(item.url)}</small>
+            </span>
+          </a>
         ) : (
-          <span className="btn disabled">リンクなし</span>
+          <span className="no-link">リンクなし</span>
         )}
         <label className={`order-check${isBought ? ' on' : ''}`}>
           <input type="checkbox" checked={isBought} onChange={isBought ? onRestore : onBought} />

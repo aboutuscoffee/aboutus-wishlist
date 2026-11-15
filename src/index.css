@@ -5,9 +5,10 @@
 :root{
   --bg:#F4F5F6;
   --panel:#FFFFFF;
-  --ink:#1F2328;
-  --ink-dim:#5F666D;
-  --ink-faint:#9AA0A6;
+  --ink:#41474E;
+  --ink-dim:#7C838A;
+  --ink-faint:#A9AEB3;
+  --link:#1F6FD1;
   --line:#DADDE0;
   --accent:#2F4A6D;
   --accent-soft:#EEF2F7;
@@ -80,6 +81,15 @@ h1{ font-size:18px; font-weight:500; margin:0; }
 .card-actions{
   display:flex; gap:8px; align-items:center; margin-top:10px; padding-top:10px; border-top:1px solid var(--line);
 }
+.item-link{
+  display:flex; align-items:center; gap:6px; min-width:0;
+  color:var(--link); text-decoration:none; font-size:14px;
+}
+.item-link svg{ flex-shrink:0; }
+.item-link span{ display:flex; flex-direction:column; line-height:1.3; min-width:0; text-decoration:underline; text-underline-offset:3px; }
+.item-link small{ font-size:11px; color:var(--ink-faint); text-decoration:none; display:inline-block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.item-link:active{ opacity:0.6; }
+.no-link{ font-size:13px; color:var(--ink-faint); }
 .order-check{
   margin-left:auto; display:flex; align-items:center; gap:6px;
   border:1px solid var(--line); border-radius:var(--radius); padding:6px 12px;
