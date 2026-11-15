@@ -3,6 +3,7 @@ import { fetchItems, createItem, updateItem, deleteItem } from './lib/db.js';
 import { yen, subtotal } from './lib/format.js';
 import ItemCard from './components/ItemCard.jsx';
 import ItemSheet from './components/ItemSheet.jsx';
+import { pushSupported, isStandalone, currentSubscription, enablePush, markSeen, notifyNewItem } from './lib/push.js';
 
 export default function App() {
   const [items, setItems] = useState([]);
@@ -11,6 +12,28 @@ export default function App() {
   const [editing, setEditing] = useState(null); // null=閉, {}=新規, item=編集
   const [showBought, setShowBought] = useState(false);
   const [toast, setToast] = useState(null);
+  // 通知（アイコンのバッジ）の状態: on / off / need-home（ホーム画面に追加が必要）/ none（非対応）
+  const [push, setPush] = useState('none');
+
+  async function refreshPush() {
+    if (pushSupported() && isStandalone()) {
+      setPush((await currentSubscription().catch(() => null)) ? 'on' : 'off');
+    } else if (/iPhone|iPad/.test(navigator.userAgent)) {
+      setPush('need-home');
+    } else {
+      setPush('none');
+    }
+  }
+
+  async function turnOnPush() {
+    try {
+      await enablePush();
+      setPush('on');
+      setToast({ text: '通知をオンにしました。新しい登録がアイコンに数字で表示されます' });
+    } catch (e) {
+      setToast({ text: e.message });
+    }
+  }
 
   async function load() {
     setLoading(true);
@@ -26,7 +49,13 @@ export default function App() {
 
   useEffect(() => {
     load();
-    const onVisible = () => document.visibilityState === 'visible' && load();
+    markSeen();
+    refreshPush();
+    const onVisible = () => {
+      if (document.visibilityState !== 'visible') return;
+      load();
+      markSeen();
+    };
     document.addEventListener('visibilitychange', onVisible);
     return () => document.removeEventListener('visibilitychange', onVisible);
   }, []);
@@ -71,9 +100,11 @@ export default function App() {
 
   const save = (fields) =>
     run(async () => {
-      const saved = editing?.id ? await updateItem(editing.id, fields) : await createItem(fields);
+      const isNew = !editing?.id;
+      const saved = isNew ? await createItem(fields) : await updateItem(editing.id, fields);
       replace(saved);
       setEditing(null);
+      if (isNew) notifyNewItem(saved.name);
     });
 
   const setStatus = (item, status) =>
@@ -162,6 +193,16 @@ export default function App() {
           )}
         </>
       )}
+
+      <footer className="push-note">
+        {push === 'off' && (
+          <button className="btn" onClick={turnOnPush}>新しい登録をアイコンの数字で知らせる（通知をオン）</button>
+        )}
+        {push === 'on' && <p>通知オン：新しい登録はアイコンに数字で表示されます</p>}
+        {push === 'need-home' && (
+          <p>共有ボタン →「ホーム画面に追加」から開くと、新しい登録をアイコンの数字で知らせる設定ができます</p>
+        )}
+      </footer>
 
       {editing && (
         <ItemSheet item={editing} onClose={() => setEditing(null)} onSave={save} onDelete={remove} />
