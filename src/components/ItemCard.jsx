@@ -28,7 +28,7 @@ export default function ItemCard({ item, onEdit, onBought, onRestore }) {
         <dt>登録日</dt>
         <dd>
           {shortDate(item.created_at)}
-          {isBought && item.bought_at && `（${shortDate(item.bought_at)} 発注）`}
+          {isBought && item.bought_at && `（${shortDate(item.bought_at)} 購入）`}
         </dd>
       </dl>
 
@@ -48,7 +48,7 @@ export default function ItemCard({ item, onEdit, onBought, onRestore }) {
         )}
         <label className={`order-check${isBought ? ' on' : ''}`}>
           <input type="checkbox" checked={isBought} onChange={isBought ? onRestore : onBought} />
-          発注済み
+          購入済み
         </label>
         <button className="btn text" onClick={onEdit}>編集</button>
       </div>

@@ -84,7 +84,7 @@ export default function App() {
       });
       replace(saved);
       if (status === 'bought') {
-        setToast({ text: `「${item.name}」を発注済みにしました`, undo: () => setStatus(saved, 'requested') });
+        setToast({ text: `「${item.name}」を購入済みにしました`, undo: () => setStatus(saved, 'requested') });
       }
     });
 
@@ -104,7 +104,7 @@ export default function App() {
 
       <section className="summary">
         <div>
-          <span className="label">未発注</span>
+          <span className="label">未購入</span>
           <span className="num">{requested.length}件</span>
         </div>
         <div>
@@ -126,7 +126,7 @@ export default function App() {
       ) : (
         <>
           {requested.length === 0 ? (
-            <div className="state">未発注の物はありません</div>
+            <div className="state">未購入の物はありません</div>
           ) : (
             <div className="cards">
               {requested.map((item) => (
@@ -143,7 +143,7 @@ export default function App() {
           {bought.length > 0 && (
             <section className="bought">
               <button className="bought-toggle" onClick={() => setShowBought((v) => !v)}>
-                <span>発注済み（{bought.length}件）</span>
+                <span>購入済み（{bought.length}件）</span>
                 <span>{showBought ? '閉じる' : '表示'}</span>
               </button>
               {showBought && (
