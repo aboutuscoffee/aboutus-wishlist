@@ -1,0 +1,10 @@
+{
+  "name": "買ってほしい物リスト",
+  "short_name": "買ってほしい物",
+  "description": "お店で必要な物の購入お願いリスト",
+  "start_url": "/aboutus-wishlist/",
+  "display": "standalone",
+  "background_color": "#F7F3EE",
+  "theme_color": "#F7F3EE",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
