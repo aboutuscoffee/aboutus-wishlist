@@ -84,7 +84,7 @@ export default function App() {
       });
       replace(saved);
       if (status === 'bought') {
-        setToast({ text: `「${item.name}」を購入済みにしました`, undo: () => setStatus(saved, 'requested') });
+        setToast({ text: `「${item.name}」を発注済みにしました`, undo: () => setStatus(saved, 'requested') });
       }
     });
 
@@ -98,22 +98,21 @@ export default function App() {
   return (
     <div className="app">
       <header>
-        <div>
-          <p className="eyebrow">Wish list</p>
-          <h1>買ってほしい物リスト</h1>
-        </div>
+        <h1>買ってほしい物リスト</h1>
+        <button className="btn primary" onClick={() => setEditing({})}>新規登録</button>
       </header>
 
       <section className="summary">
         <div>
-          <span className="label">お願い中</span>
-          <span className="num">{requested.length}</span>
-          <span className="unit">件</span>
+          <span className="label">未発注</span>
+          <span className="num">{requested.length}件</span>
         </div>
         <div>
-          <span className="label">合計</span>
-          <span className="num">{yen(total)}</span>
-          {hasUnpriced && <span className="unit">＋金額未定あり</span>}
+          <span className="label">合計金額（税込）</span>
+          <span className="num">
+            {yen(total)}
+            {hasUnpriced && <small>＋金額未定あり</small>}
+          </span>
         </div>
       </section>
 
@@ -127,7 +126,7 @@ export default function App() {
       ) : (
         <>
           {requested.length === 0 ? (
-            <div className="state">今お願いしている物はありません</div>
+            <div className="state">未発注の物はありません</div>
           ) : (
             <div className="cards">
               {requested.map((item) => (
@@ -144,7 +143,8 @@ export default function App() {
           {bought.length > 0 && (
             <section className="bought">
               <button className="bought-toggle" onClick={() => setShowBought((v) => !v)}>
-                購入済み {bought.length}件 {showBought ? '▲' : '▼'}
+                <span>発注済み（{bought.length}件）</span>
+                <span>{showBought ? '閉じる' : '表示'}</span>
               </button>
               {showBought && (
                 <div className="cards">
@@ -162,8 +162,6 @@ export default function App() {
           )}
         </>
       )}
-
-      <button className="fab" onClick={() => setEditing({})}>＋ 追加</button>
 
       {editing && (
         <ItemSheet item={editing} onClose={() => setEditing(null)} onSave={save} onDelete={remove} />

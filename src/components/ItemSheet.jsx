@@ -31,24 +31,24 @@ export default function ItemSheet({ item, onClose, onSave, onDelete }) {
   }
 
   return (
-    <Sheet title={isNew ? '買ってほしい物を追加' : '編集'} onClose={onClose}>
+    <Sheet title={isNew ? '新規登録' : '編集'} onClose={onClose}>
       <form className="form" onSubmit={submit}>
         <label>
           商品名
-          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="例：ドリップケトル" required />
+          <input value={name} onChange={(e) => setName(e.target.value)} required />
         </label>
         <label>
-          <span>用途 <small>何に使うか</small></span>
-          <textarea rows={2} value={purpose} onChange={(e) => setPurpose(e.target.value)} placeholder="例：ハンドドリップの抽出" />
+          用途
+          <textarea rows={2} value={purpose} onChange={(e) => setPurpose(e.target.value)} />
         </label>
         <label>
-          <span>目的 <small>なぜ必要か・買うと何が良くなるか</small></span>
-          <textarea rows={3} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="例：今のケトルは注ぎ口が太く湯量が安定しない。味のブレを減らしたい" />
+          備考
+          <textarea rows={2} value={reason} onChange={(e) => setReason(e.target.value)} />
         </label>
         <div className="row2">
           <label>
-            <span>金額 <small>1個・税込</small></span>
-            <input inputMode="numeric" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="未定なら空欄" />
+            <span>単価 <small>税込・未定は空欄</small></span>
+            <input inputMode="numeric" value={price} onChange={(e) => setPrice(e.target.value)} />
           </label>
           <label>
             個数
@@ -61,7 +61,7 @@ export default function ItemSheet({ item, onClose, onSave, onDelete }) {
         </label>
         <label className="check">
           <input type="checkbox" checked={urgent} onChange={(e) => setUrgent(e.target.checked)} />
-          急ぎ（一番上に表示）
+          至急
         </label>
 
         <button className="btn primary block" type="submit" disabled={!name.trim() || saving}>
