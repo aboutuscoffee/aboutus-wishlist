@@ -5,6 +5,9 @@ import ItemCard from './components/ItemCard.jsx';
 import ItemSheet from './components/ItemSheet.jsx';
 import { pushSupported, isStandalone, currentSubscription, enablePush, markSeen, notifyNewItem } from './lib/push.js';
 
+// アイコンのバッジ（プッシュ通知）は保留中。wl_push_subs のSQL実行と wl-send-push の公開が済んだら true にする
+const PUSH_READY = false;
+
 export default function App() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -104,7 +107,7 @@ export default function App() {
       const saved = isNew ? await createItem(fields) : await updateItem(editing.id, fields);
       replace(saved);
       setEditing(null);
-      if (isNew) notifyNewItem(saved.name);
+      if (isNew && PUSH_READY) notifyNewItem(saved.name);
     });
 
   const setStatus = (item, status) =>
@@ -194,7 +197,7 @@ export default function App() {
         </>
       )}
 
-      <footer className="push-note">
+      {PUSH_READY && <footer className="push-note">
         {push === 'off' && (
           <button className="btn" onClick={turnOnPush}>新しい登録をアイコンの数字で知らせる（通知をオン）</button>
         )}
@@ -202,7 +205,7 @@ export default function App() {
         {push === 'need-home' && (
           <p>共有ボタン →「ホーム画面に追加」から開くと、新しい登録をアイコンの数字で知らせる設定ができます</p>
         )}
-      </footer>
+      </footer>}
 
       {editing && (
         <ItemSheet item={editing} onClose={() => setEditing(null)} onSave={save} onDelete={remove} />
