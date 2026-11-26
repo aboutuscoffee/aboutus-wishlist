@@ -160,3 +160,6 @@ textarea{ resize:vertical; }
   background:var(--ink); color:#fff; padding:10px 14px; border-radius:var(--radius); font-size:13.5px; z-index:30;
 }
 .toast button{ background:none; border:0; color:#9CC3F0; font-weight:400; flex-shrink:0; }
+
+/* 保留・見送りの目印 */
+.tag.muted { background: #e9ebef; color: #5b6470; border-color: #d5d9e0; }

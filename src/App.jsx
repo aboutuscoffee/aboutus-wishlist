@@ -72,19 +72,27 @@ export default function App() {
   const requested = useMemo(
     () =>
       items
-        .filter((i) => i.status === 'requested')
-        .sort((a, b) => Number(b.urgent) - Number(a.urgent) || b.created_at.localeCompare(a.created_at)),
+        .filter((i) => i.status === 'requested' || i.status === 'on_hold')
+        // 保留は下に、その中では至急→新しい順
+        .sort(
+          (a, b) =>
+            Number(a.status === 'on_hold') - Number(b.status === 'on_hold') ||
+            Number(b.urgent) - Number(a.urgent) ||
+            b.created_at.localeCompare(a.created_at)
+        ),
     [items]
   );
   const bought = useMemo(
     () =>
       items
-        .filter((i) => i.status === 'bought')
+        .filter((i) => i.status === 'bought' || i.status === 'declined')
         .sort((a, b) => (b.bought_at || '').localeCompare(a.bought_at || '')),
     [items]
   );
-  const total = requested.reduce((s, i) => s + (subtotal(i) || 0), 0);
-  const hasUnpriced = requested.some((i) => i.price == null);
+  // 件数と合計は保留を除く
+  const waiting = requested.filter((i) => i.status === 'requested');
+  const total = waiting.reduce((s, i) => s + (subtotal(i) || 0), 0);
+  const hasUnpriced = waiting.some((i) => i.price == null);
 
   function replace(item) {
     setItems((prev) => {
@@ -139,7 +147,7 @@ export default function App() {
       <section className="summary">
         <div>
           <span className="label">未購入</span>
-          <span className="num">{requested.length}件</span>
+          <span className="num">{waiting.length}件</span>
         </div>
         <div>
           <span className="label">合計金額（税込）</span>
@@ -177,7 +185,7 @@ export default function App() {
           {bought.length > 0 && (
             <section className="bought">
               <button className="bought-toggle" onClick={() => setShowBought((v) => !v)}>
-                <span>購入済み（{bought.length}件）</span>
+                <span>購入済み・見送り（{bought.length}件）</span>
                 <span>{showBought ? '閉じる' : '表示'}</span>
               </button>
               {showBought && (

@@ -6,7 +6,9 @@ export default function ItemCard({ item, onEdit, onBought, onRestore }) {
     <article className={`card${isBought ? ' done' : ''}`}>
       <div className="card-head">
         <h2>
-          {item.urgent && !isBought && <span className="tag">至急</span>}
+          {item.urgent && !isBought && item.status !== 'declined' && <span className="tag">至急</span>}
+          {item.status === 'on_hold' && <span className="tag muted">保留</span>}
+          {item.status === 'declined' && <span className="tag muted">見送り</span>}
           {item.name}
         </h2>
         <span className="subtotal">{item.price == null ? '金額未定' : yen(subtotal(item))}</span>
@@ -25,6 +27,14 @@ export default function ItemCard({ item, onEdit, onBought, onRestore }) {
         <dd>
           {yen(item.price)} × {item.quantity}
         </dd>
+        {(item.requested_by || item.assigned_to_name) && (
+          <>
+            <dt>依頼</dt>
+            <dd>
+              {item.requested_by || '—'} → {item.assigned_to_name || '未指定'}
+            </dd>
+          </>
+        )}
         <dt>登録日</dt>
         <dd>
           {shortDate(item.created_at)}
